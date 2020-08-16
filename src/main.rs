@@ -1,14 +1,14 @@
-
 fn main() {
     println!("Hello, world!");
-    let nums = vec![5, 23, 6, 435, 234, 234, 5654];
+    let mut nums = vec![5, 23, 6, 435, 234, 234, 5654];
 
     let found_index = binary_search(&nums, &5654).unwrap();
     println!("found at index {}", found_index);
 
     let empty = binary_search(&nums, &21);
     println!("empty: {}", empty.is_none());
-    println!("{:?}", selection_sort(nums));
+    selection_sort(&mut nums);
+    println!("{:?}", nums);
 }
 
 fn binary_search<T: PartialEq + PartialOrd>(vec: &Vec<T>, item: &T) -> Option<usize> {
@@ -33,18 +33,14 @@ fn binary_search<T: PartialEq + PartialOrd>(vec: &Vec<T>, item: &T) -> Option<us
     None
 }
 
-fn selection_sort<T: PartialOrd + PartialEq + Copy>(unsorted: Vec<T>) -> Vec<T> {
-    let mut unsorted = unsorted;
-    let mut sorted: Vec<T> = Vec::with_capacity(unsorted.len());
-    for i in 0..unsorted.len() {
-        let (smallest, index) = smallest(&unsorted);
-        sorted.push(*smallest);
-        unsorted.remove(index);
+fn selection_sort<T: PartialOrd>(vec: &mut [T]) {
+    for i in 0..vec.len() {
+        let (smallest, index) = smallest(&vec[i..vec.len()]);
+        vec.swap(i, index + i);
     }
-    sorted
 }
 
-fn smallest<T: PartialOrd + PartialEq + Copy>(vec: &[T]) -> (&T, usize) {
+fn smallest<T: PartialOrd>(vec: &[T]) -> (&T, usize) {
     let mut smallest = vec.get(0).unwrap();
     let mut index: usize = 0;
     for i in 0..vec.len() {
