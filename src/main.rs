@@ -1,12 +1,13 @@
 use std::ops::Add;
+use std::fmt::Debug;
 
 fn main() {
-    let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654];
+    let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
 
     selection_sort(&mut nums);
     println!("{:?}", nums);
 
-    let found_index = binary_search(&nums, &234).unwrap();
+    let found_index = binary_search(&nums, &45535).unwrap();
     println!("found at index {}", found_index);
 
     let empty = binary_search(&nums, &21);
@@ -20,9 +21,12 @@ fn main() {
 
     let largest = max_dc(&nums);
     println!("max is {}", largest);
+
+    let found = binary_search_dc(&nums, &45535);
+    println!("{:?}", found);
 }
 
-fn binary_search<T: PartialEq + PartialOrd>(vec: &Vec<T>, item: &T) -> Option<usize> {
+fn binary_search<T: PartialEq + PartialOrd>(vec: &[T], item: &T) -> Option<usize> {
     let mut low: usize = 0;
     let mut high = vec.len() - 1;
     let mut mid = (high + low) / 2;
@@ -86,4 +90,35 @@ fn max_dc<T: PartialOrd + Copy>(values: &[T]) -> &T {
     let current = &values[0];
     let next = max_dc(&values[1..]);
     return if current > next { current } else { next };
+}
+
+fn binary_search_dc<T: PartialEq + PartialOrd + Debug>(items: &[T], item: &T) -> Option<usize> {
+    println!("{:?}", items);
+    if items.len() == 0 {
+        return None;
+    }
+    if items.len() == 1 {
+        return if item == &items[0] { Some(0) } else { None };
+    }
+    let high = items.len() - 1;
+    let mid = high / 2;
+    let current = items.get(mid).unwrap();
+    return if current == item {
+        Some(mid)
+    } else {
+        let (lower, upper, should_add) =
+            if current > item {
+                (0 as usize, mid - 1, false)
+            } else {
+                (mid + 1, items.len(), true)
+            };
+        let maybe = binary_search_dc(&items[lower..upper], item);
+        if let Some(val) = maybe {
+            if should_add {
+                Some(val + mid)
+            } else {
+                Some(val)
+            }
+        } else { None }
+    };
 }
