@@ -29,6 +29,10 @@ fn main() {
     let nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
     let result = quicksort(nums);
     println!("{:?}, {}", result, result.len());
+
+    let nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
+    let m_sorted = mergesort(nums);
+    println!("{:?}", m_sorted);
 }
 
 fn binary_search<T: PartialEq + PartialOrd>(vec: &[T], item: &T) -> Option<usize> {
@@ -127,7 +131,7 @@ fn binary_search_dc<T: PartialEq + PartialOrd>(items: &[T], item: &T) -> Option<
     };
 }
 
-fn quicksort<T: PartialEq + PartialOrd + Copy + Debug>(items: Vec<T>) -> Vec<T> {
+fn quicksort<T: PartialEq + PartialOrd + Copy>(items: Vec<T>) -> Vec<T> {
     let mut items = items;
     if items.len() < 2 {
         return items;
@@ -135,11 +139,13 @@ fn quicksort<T: PartialEq + PartialOrd + Copy + Debug>(items: Vec<T>) -> Vec<T> 
     let mid = items.len() / 2;
     let pivot = items.remove(mid);
 
+    // sorting part
     let mut less = items.clone();
     less.retain(|item| item <= &pivot);
     let mut more = items.clone();
     more.retain(|item| item > &pivot);
 
+    // recursive part
     let mut less = quicksort(less);
     let mut more = quicksort(more);
 
@@ -148,4 +154,48 @@ fn quicksort<T: PartialEq + PartialOrd + Copy + Debug>(items: Vec<T>) -> Vec<T> 
     result.push(pivot);
     result.append(&mut more);
     result
+}
+
+fn mergesort<T: PartialEq + PartialOrd + Copy>(items: Vec<T>) -> Vec<T> {
+    let len = items.len();
+    // base case, already sorted array of one/zero
+    if len < 2 {
+        return items;
+    }
+    // recursive case
+    let mid = len / 2;
+    // range is [inclusive..exclusive]
+    // i.e. [a,b)
+    let left = items[..mid].to_vec();
+    let right = items[mid..].to_vec();
+
+    // reduced to a base case of 1 element
+    // in which case it's merged
+    // then, the stack collapses upwards
+    let sorted_left = mergesort(left);
+    let sorted_right = mergesort(right);
+    return merge(sorted_left, sorted_right);
+}
+
+fn merge<T: PartialOrd + Copy>(mut arr1: Vec<T>, mut arr2: Vec<T>) -> Vec<T> {
+    let mut sorted: Vec<T> = Vec::with_capacity(arr1.len() + arr2.len());
+
+    // sorted merge
+    while arr1.len() > 0 && arr2.len() > 0 {
+        if arr1[0] > arr2[0] {
+            let a = arr2.remove(0);
+            sorted.push(a);
+        } else {
+            let b = arr1.remove(0);
+            sorted.push(b);
+        }
+    }
+    // either/both array(s) is empty
+    for val in arr1 {
+        sorted.push(val);
+    }
+    for val in arr2 {
+        sorted.push(val);
+    }
+    sorted
 }
