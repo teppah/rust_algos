@@ -24,6 +24,11 @@ fn main() {
 
     let found = binary_search_dc(&nums, &45535);
     println!("{:?}", found);
+
+
+    let nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
+    let result = quicksort(nums);
+    println!("{:?}, {}", result, result.len());
 }
 
 fn binary_search<T: PartialEq + PartialOrd>(vec: &[T], item: &T) -> Option<usize> {
@@ -92,8 +97,7 @@ fn max_dc<T: PartialOrd + Copy>(values: &[T]) -> &T {
     return if current > next { current } else { next };
 }
 
-fn binary_search_dc<T: PartialEq + PartialOrd + Debug>(items: &[T], item: &T) -> Option<usize> {
-    println!("{:?}", items);
+fn binary_search_dc<T: PartialEq + PartialOrd>(items: &[T], item: &T) -> Option<usize> {
     if items.len() == 0 {
         return None;
     }
@@ -121,4 +125,27 @@ fn binary_search_dc<T: PartialEq + PartialOrd + Debug>(items: &[T], item: &T) ->
             }
         } else { None }
     };
+}
+
+fn quicksort<T: PartialEq + PartialOrd + Copy + Debug>(items: Vec<T>) -> Vec<T> {
+    let mut items = items;
+    if items.len() < 2 {
+        return items;
+    }
+    let mid = items.len() / 2;
+    let pivot = items.remove(mid);
+
+    let mut less = items.clone();
+    less.retain(|item| item <= &pivot);
+    let mut more = items.clone();
+    more.retain(|item| item > &pivot);
+
+    let mut less = quicksort(less);
+    let mut more = quicksort(more);
+
+    let mut result = vec![];
+    result.append(&mut less);
+    result.push(pivot);
+    result.append(&mut more);
+    result
 }
