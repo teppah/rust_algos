@@ -1,6 +1,6 @@
-use std::ops::Add;
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
-use std::collections::{HashMap, VecDeque};
+use std::ops::Add;
 
 fn main() {
     let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
@@ -44,8 +44,9 @@ fn main() {
     graph.insert("peggy", vec!["thom"]);
     graph.insert("thom", vec!["anuj"]);
     graph.insert("jonny", vec!["alice"]);
+    graph.insert("alice", vec!["you"]);
 
-    let result = bfs(&mut graph, "peggy", "jonny");
+    let result = bfs(&mut graph, "bob", "claire");
     println!("{:?}", result);
 }
 
@@ -214,26 +215,35 @@ fn merge<T: PartialOrd + Copy>(mut arr1: Vec<T>, mut arr2: Vec<T>) -> Vec<T> {
     sorted
 }
 
-fn bfs<>(graph: &mut HashMap<&str, Vec<&str>>, origin: &str, destination: &str) -> bool {
-    let mut visited: Vec<&str> = vec![];
-    let mut to_visit: VecDeque<&str> = VecDeque::new();
+fn bfs(graph: &mut HashMap<&str, Vec<&str>>, origin: &str, destination: &str) -> bool {
+    let mut visited: HashSet<&str> = HashSet::new();
+
+    // queue of nodes (last node of path) to search
+    let mut to_visit: VecDeque<Vec<&str>> = VecDeque::new();
 
     if !graph.contains_key(origin) || !graph.contains_key(destination) {
         return false;
     }
-    to_visit.push_back(origin);
+    to_visit.push_back(vec![origin]);
 
     while let Some(current) = to_visit.pop_front() {
-        if current == destination {
+        // get the last node of the path
+        let latest = *current.last().unwrap();
+        if latest == destination {
+            println!("{:?}", current);
             return true;
         }
-        if visited.contains(&current) {
-            continue;
-        }
-        visited.push(current);
-        if let Some(dests) = graph.get(current) {
-            let mut new_searches: VecDeque<&str> = dests.iter().cloned().collect();
-            to_visit.append(&mut new_searches);
+        visited.insert(latest);
+        if let Some(dests) = graph.get(latest) {
+            // for all nodes that the current node points to
+            for destination in dests {
+                if visited.contains(*destination) { continue; }
+                // create a copy of the current path, append the next node
+                // then add it back to the search queue
+                let mut new_path = current.clone();
+                new_path.push(destination);
+                to_visit.push_back(new_path);
+            }
         }
     }
     false
