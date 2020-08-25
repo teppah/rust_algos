@@ -1,5 +1,6 @@
 use std::ops::Add;
 use std::fmt::Debug;
+use std::collections::{HashMap, VecDeque};
 
 fn main() {
     let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
@@ -33,6 +34,19 @@ fn main() {
     let nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
     let m_sorted = mergesort(nums);
     println!("{:?}", m_sorted);
+
+    let mut graph: HashMap<&str, Vec<&str>> = HashMap::new();
+    graph.insert("you", vec!["bob", "claire", "alice"]);
+    graph.insert("bob", vec!["anuj", "peggy"]);
+    graph.insert("alice", vec!["peggy"]);
+    graph.insert("claire", vec!["thom", "jonny"]);
+    graph.insert("anuj", vec!["jonny"]);
+    graph.insert("peggy", vec!["thom"]);
+    graph.insert("thom", vec!["anuj"]);
+    graph.insert("jonny", vec!["alice"]);
+
+    let result = bfs(&mut graph, "peggy", "jonny");
+    println!("{:?}", result);
 }
 
 fn binary_search<T: PartialEq + PartialOrd>(vec: &[T], item: &T) -> Option<usize> {
@@ -198,4 +212,29 @@ fn merge<T: PartialOrd + Copy>(mut arr1: Vec<T>, mut arr2: Vec<T>) -> Vec<T> {
         sorted.push(val);
     }
     sorted
+}
+
+fn bfs<>(graph: &mut HashMap<&str, Vec<&str>>, origin: &str, destination: &str) -> bool {
+    let mut visited: Vec<&str> = vec![];
+    let mut to_visit: VecDeque<&str> = VecDeque::new();
+
+    if !graph.contains_key(origin) || !graph.contains_key(destination) {
+        return false;
+    }
+    to_visit.push_back(origin);
+
+    while let Some(current) = to_visit.pop_front() {
+        if current == destination {
+            return true;
+        }
+        if visited.contains(&current) {
+            continue;
+        }
+        visited.push(current);
+        if let Some(dests) = graph.get(current) {
+            let mut new_searches: VecDeque<&str> = dests.iter().cloned().collect();
+            to_visit.append(&mut new_searches);
+        }
+    }
+    false
 }
