@@ -1,7 +1,9 @@
 use rust_algos::search::{binary_search, bfs};
 use rust_algos::sort::{selection_sort, quicksort, mergesort};
 use rust_algos::dc::{sum_dc, count_dc, max_dc, binary_search_dc};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+use rust_algos::dijkstra::{find_path, Edge};
+use std::iter::FromIterator;
 
 fn main() {
     let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
@@ -49,5 +51,14 @@ fn main() {
 
     let result = bfs(&mut graph, "bob", "claire");
     println!("{:?}", result);
+
+    let mut graph: HashMap<&str, HashSet<Edge>> = HashMap::new();
+    graph.insert("book", HashSet::from_iter(vec![Edge { target: "lp", distance: 5 }, Edge { target: "poster", distance: 0 }].iter().cloned()));
+    graph.insert("lp", HashSet::from_iter(vec![Edge { target: "bass", distance: 15 }, Edge { target: "drum", distance: 20 }].iter().cloned()));
+    graph.insert("poster", HashSet::from_iter(vec![Edge { target: "bass", distance: 30 }, Edge { target: "drum", distance: 35 }].iter().cloned()));
+    graph.insert("bass", HashSet::from_iter(vec![Edge { target: "piano", distance: 20 }].iter().cloned()));
+    graph.insert("drum", HashSet::from_iter(vec![Edge { target: "piano", distance: 10 }].iter().cloned()));
+
+    let result = find_path(&graph, "book", "piano");
 }
 
