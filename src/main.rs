@@ -1,4 +1,4 @@
-use rust_algos::search::binary_search;
+use rust_algos::search::{binary_search, bfs};
 use rust_algos::sort::{selection_sort, quicksort, mergesort};
 use rust_algos::dc::{sum_dc, count_dc, max_dc, binary_search_dc};
 use std::collections::HashMap;

@@ -1,3 +1,5 @@
+pub mod dijkstra;
+
 pub mod search {
     use std::collections::{HashMap, HashSet, VecDeque};
 
@@ -22,7 +24,7 @@ pub mod search {
         None
     }
 
-    fn bfs(graph: &mut HashMap<&str, Vec<&str>>, origin: &str, destination: &str) -> bool {
+    pub fn bfs(graph: &mut HashMap<&str, Vec<&str>>, origin: &str, destination: &str) -> bool {
         let mut visited: HashSet<&str> = HashSet::new();
 
         // queue of nodes (last node of path) to search
