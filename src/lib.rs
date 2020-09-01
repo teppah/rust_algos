@@ -1,4 +1,5 @@
 pub mod dijkstra;
+pub mod iterative;
 
 pub mod search {
     use std::collections::{HashMap, HashSet, VecDeque};
@@ -139,12 +140,8 @@ pub mod sort {
             }
         }
         // either/both array(s) is empty
-        for val in arr1 {
-            sorted.push(val);
-        }
-        for val in arr2 {
-            sorted.push(val);
-        }
+        sorted.append(&mut arr1);
+        sorted.append(&mut arr2);
         sorted
     }
 }

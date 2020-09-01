@@ -36,7 +36,7 @@ pub fn find_path(graph: &HashMap<&str, HashSet<Edge>>, origin: &str, destination
 
     while let Some(State { name, cost }) = heap.pop() {
         if name == destination {
-            let backtraced = backtrace(destination, parents);
+            let backtraced = backtrace(destination, &parents);
             println!("{:?}", backtraced);
             return Some(cost);
         }
@@ -73,7 +73,7 @@ pub fn find_path(graph: &HashMap<&str, HashSet<Edge>>, origin: &str, destination
     None
 }
 
-fn backtrace(end: &str, parents: HashMap<&str, Option<String>>) -> Vec<String> {
+fn backtrace(end: &str, parents: &HashMap<&str, Option<String>>) -> Vec<String> {
     let mut to_search = end.to_string();
     let mut result = vec![];
     result.push(end.to_string());

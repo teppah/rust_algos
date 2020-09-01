@@ -60,5 +60,10 @@ fn main() {
     graph.insert("drum", HashSet::from_iter(vec![Edge { target: "piano", distance: 10 }].iter().cloned()));
 
     let result = find_path(&graph, "book", "piano");
+
+
+    let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
+    rust_algos::iterative::quicksort(&mut nums);
+    println!("{:?}", nums);
 }
 
