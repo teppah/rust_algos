@@ -15,15 +15,15 @@ fn do_quicksort<T: PartialOrd + Debug>(items: &mut [T], low: usize, high: usize)
 // assume high is exclusive
 fn partition_qs<T: PartialOrd + Debug>(items: &mut [T], low: usize, high: usize) -> usize {
     let mut swap_index: usize = low;
-    let mid = (low + high) / 2;
+    let pivot_index = high - 1;
     for i in low..high {
         let to_compare = &items[i];
-        if to_compare < &items[mid] {
+        if to_compare < &items[pivot_index] {
             items.swap(i, swap_index);
             swap_index += 1;
         }
     }
-    items.swap(mid, swap_index);
+    items.swap(pivot_index, swap_index);
     swap_index
 }
 
