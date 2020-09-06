@@ -65,5 +65,10 @@ fn main() {
     let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
     rust_algos::iterative::quicksort(&mut nums);
     println!("{:?}", nums);
+
+
+    let mut nums = vec![5, 23, 6, 45535, 234, 234, 5654, 54, 235, 4353, 87, 56, 5, 3, 643, 6, 4, 6655, 767];
+    rust_algos::iterative::mergesort(&mut nums);
+    println!("{:?}", nums);
 }
 
